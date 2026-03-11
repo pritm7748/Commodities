@@ -1,11 +1,9 @@
 // ═══════════════════════════════════════════════════════════
-// News Cache Service — Server-side daily cache for NewsData.io
+// News Cache Service — Server-side in-memory cache for NewsData.io
 // Fetches 50 articles in 5×10 batches, deduplicates by title,
-// and caches to disk so API credits aren't wasted on repeat visits.
+// and caches in memory so API credits aren't wasted on repeat visits.
+// Vercel-compatible: no filesystem writes.
 // ═══════════════════════════════════════════════════════════
-
-import fs from 'fs';
-import path from 'path';
 
 interface CachedNews {
     fetchedAt: string;          // ISO timestamp
@@ -24,12 +22,12 @@ export interface NewsArticle {
     [key: string]: unknown;
 }
 
-const CACHE_DIR = path.join(process.cwd(), '.cache');
-const CACHE_FILE = path.join(CACHE_DIR, 'news-cache.json');
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const BATCH_SIZE = 10;  // NewsData.io free plan max per request
 const BATCH_COUNT = 5;  // 5 batches × 10 = 50 raw articles
 const BATCH_DELAY_MS = 1100; // slight delay between batches to avoid rate-limiting
+
+// ── In-memory cache ───────────────────────────────────────
+let memoryCache: CachedNews | null = null;
 
 // ── Helpers ───────────────────────────────────────────────
 
@@ -62,47 +60,20 @@ function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// ── Cache I/O ─────────────────────────────────────────────
-
-function ensureCacheDir() {
-    if (!fs.existsSync(CACHE_DIR)) {
-        fs.mkdirSync(CACHE_DIR, { recursive: true });
-    }
-}
-
-function readCache(): CachedNews | null {
-    try {
-        if (!fs.existsSync(CACHE_FILE)) return null;
-        const raw = fs.readFileSync(CACHE_FILE, 'utf-8');
-        const cached: CachedNews = JSON.parse(raw);
-        return cached;
-    } catch {
-        return null;
-    }
-}
-
-function writeCache(articles: NewsArticle[]) {
-    ensureCacheDir();
-    const data: CachedNews = {
-        fetchedAt: new Date().toISOString(),
-        articles,
-    };
-    fs.writeFileSync(CACHE_FILE, JSON.stringify(data, null, 2), 'utf-8');
-}
+// ── Cache validation ──────────────────────────────────────
 
 function isCacheValid(cached: CachedNews): boolean {
     const fetchedDate = new Date(cached.fetchedAt);
     const now = new Date();
 
-    // Invalidate if it's a new calendar day (clears stale cache automatically)
+    // Invalidate if it's a new calendar day
     const sameDay =
         fetchedDate.getFullYear() === now.getFullYear() &&
         fetchedDate.getMonth() === now.getMonth() &&
         fetchedDate.getDate() === now.getDate();
 
     if (!sameDay) {
-        // Delete stale cache file to free storage
-        try { fs.unlinkSync(CACHE_FILE); } catch { /* ignore */ }
+        memoryCache = null;
         return false;
     }
 
@@ -158,16 +129,13 @@ export async function getNews(options: {
         throw new Error('NEWS_API_KEY not configured');
     }
 
-    // Check cache first (unless forced refresh)
-    if (!forceRefresh) {
-        const cached = readCache();
-        if (cached && isCacheValid(cached) && cached.articles.length > 0) {
-            return {
-                articles: cached.articles,
-                fromCache: true,
-                fetchedAt: cached.fetchedAt,
-            };
-        }
+    // Check in-memory cache first (unless forced refresh)
+    if (!forceRefresh && memoryCache && isCacheValid(memoryCache) && memoryCache.articles.length > 0) {
+        return {
+            articles: memoryCache.articles,
+            fromCache: true,
+            fetchedAt: memoryCache.fetchedAt,
+        };
     }
 
     // Fetch in batches of 10
@@ -198,12 +166,13 @@ export async function getNews(options: {
     // Deduplicate
     const deduped = deduplicateArticles(allArticles);
 
-    // Write to cache
-    writeCache(deduped);
+    // Store in memory cache
+    const fetchedAt = new Date().toISOString();
+    memoryCache = { fetchedAt, articles: deduped };
 
     return {
         articles: deduped,
         fromCache: false,
-        fetchedAt: new Date().toISOString(),
+        fetchedAt,
     };
 }
