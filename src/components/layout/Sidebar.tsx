@@ -48,14 +48,21 @@ const NAV_SECTIONS = [
 interface SidebarProps {
     collapsed: boolean;
     onToggle: () => void;
+    mobileOpen?: boolean;
+    onMobileClose?: () => void;
 }
 
-export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export default function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-            <Link href="/" className="sidebar-logo" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+        <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
+            <Link
+                href="/"
+                className="sidebar-logo"
+                style={{ textDecoration: 'none', cursor: 'pointer' }}
+                onClick={onMobileClose}
+            >
                 <div className="sidebar-logo-icon">C</div>
                 <div className="sidebar-logo-text">
                     <h1>Commodity HQ</h1>
@@ -72,6 +79,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                                 key={item.href}
                                 href={item.href}
                                 className={`sidebar-link ${pathname === item.href ? 'active' : ''}`}
+                                onClick={onMobileClose}
                             >
                                 <span className="sidebar-link-icon">{item.icon}</span>
                                 <span>{item.name}</span>
@@ -86,6 +94,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                     href="/settings"
                     className={`sidebar-link ${pathname === '/settings' ? 'active' : ''}`}
                     style={{ textDecoration: 'none' }}
+                    onClick={onMobileClose}
                 >
                     <span className="sidebar-link-icon">⚙️</span>
                     <span>Settings</span>

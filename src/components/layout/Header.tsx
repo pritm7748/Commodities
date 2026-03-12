@@ -8,9 +8,10 @@ import Link from 'next/link';
 interface HeaderProps {
     title: string;
     subtitle?: string;
+    onMenuToggle?: () => void;
 }
 
-export default function Header({ title, subtitle }: HeaderProps) {
+export default function Header({ title, subtitle, onMenuToggle }: HeaderProps) {
     const { theme, toggleTheme } = useTheme();
     const { user, loading, signOut } = useAuth();
 
@@ -36,6 +37,14 @@ export default function Header({ title, subtitle }: HeaderProps) {
     return (
         <header className="header">
             <div className="header-left">
+                {/* Hamburger for mobile */}
+                <button
+                    className="btn-icon mobile-menu-btn"
+                    onClick={onMenuToggle}
+                    aria-label="Menu"
+                >
+                    ☰
+                </button>
                 <div>
                     <div className="header-title">{title}</div>
                     {subtitle && (

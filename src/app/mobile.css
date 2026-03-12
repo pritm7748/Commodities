@@ -1,0 +1,460 @@
+/* ═══════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — Commodity HQ
+   Comprehensive media queries for full mobile support.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Mobile Overlay ────────────────────────────────────── */
+.mobile-overlay {
+    display: none;
+}
+
+/* ── Hamburger button (hidden on desktop) ──────────────── */
+.mobile-menu-btn {
+    display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TABLET — max-width: 1024px
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+    /* Show hamburger */
+    .mobile-menu-btn {
+        display: inline-flex !important;
+        font-size: 1.3rem;
+    }
+
+    /* Sidebar: slide-in drawer */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 100;
+        box-shadow: none;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Remove margin since sidebar is overlay */
+    .main-area {
+        margin-left: 0 !important;
+    }
+
+    /* Overlay backdrop */
+    .mobile-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        backdrop-filter: blur(2px);
+    }
+
+    /* Dashboard grid */
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+        gap: var(--space-4);
+    }
+
+    /* Page header */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE — max-width: 768px
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* ── Spacing & Layout ─────────────────────────── */
+    .main-content {
+        padding: var(--space-3) !important;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    .header {
+        padding: 0 var(--space-3);
+        height: 52px;
+    }
+
+    .header-title {
+        font-size: var(--text-sm) !important;
+    }
+
+    .header-right {
+        gap: var(--space-1);
+    }
+
+    /* Shrink header buttons */
+    .header .btn-icon {
+        width: 32px;
+        height: 32px;
+        font-size: var(--text-sm);
+    }
+
+    /* Live badge */
+    .header-live-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .header-right .btn {
+        padding: var(--space-1) var(--space-2);
+        font-size: var(--text-xs);
+    }
+
+    /* ── Ticker Bar ────────────────────────────────── */
+    .ticker-bar {
+        height: 28px;
+        font-size: 10px;
+    }
+
+    /* ── Dashboard Grids ───────────────────────────── */
+    .grid-4,
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: var(--space-2) !important;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .grid-auto {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ── Stats Bar ─────────────────────────────────── */
+    .stats-bar {
+        padding: var(--space-3);
+        gap: var(--space-3);
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        min-width: 60px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+
+    .stat-value {
+        font-size: var(--text-xs);
+    }
+
+    /* ── Dashboard Controls ────────────────────────── */
+    .dashboard-controls {
+        gap: var(--space-2);
+        margin-bottom: var(--space-3);
+    }
+
+    .filter-toggle {
+        border-radius: var(--radius-sm);
+    }
+
+    .filter-btn {
+        padding: var(--space-1) var(--space-2);
+        font-size: 10px;
+    }
+
+    /* ── Sector Tabs ───────────────────────────────── */
+    .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0;
+        padding-bottom: 2px;
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tab {
+        padding: var(--space-1) var(--space-2);
+        font-size: var(--text-xs);
+        flex-shrink: 0;
+    }
+
+    /* ── Commodity Cards ───────────────────────────── */
+    .commodity-card {
+        padding: var(--space-3);
+    }
+
+    .commodity-card:hover {
+        transform: none; /* Disable hover lift on touch */
+    }
+
+    .commodity-card-name {
+        font-size: var(--text-xs);
+    }
+
+    .commodity-card-exchange {
+        font-size: 10px;
+        padding: 1px 6px;
+    }
+
+    .commodity-card-price {
+        font-size: var(--text-base);
+    }
+
+    .commodity-card-change {
+        font-size: var(--text-xs);
+        padding: 1px 6px;
+    }
+
+    .commodity-card-meta {
+        gap: var(--space-1);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+
+    .commodity-card-meta-label {
+        font-size: 10px;
+    }
+
+    .commodity-card-meta-value {
+        font-size: var(--text-xs);
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card {
+        padding: var(--space-3);
+    }
+
+    .card-header {
+        margin-bottom: var(--space-2);
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    /* ── Tables ────────────────────────────────────── */
+    .data-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 calc(-1 * var(--space-3));
+        padding: 0 var(--space-3);
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: var(--space-2);
+        font-size: var(--text-xs);
+    }
+
+    /* ── Page Header ──────────────────────────────── */
+    .page-header {
+        margin-bottom: var(--space-4);
+        gap: var(--space-2);
+    }
+
+    .page-title {
+        font-size: var(--text-lg);
+    }
+
+    .page-subtitle {
+        font-size: var(--text-xs);
+    }
+
+    /* ── Selects & Inputs ─────────────────────────── */
+    .select {
+        padding: var(--space-1) var(--space-6) var(--space-1) var(--space-2);
+        font-size: var(--text-xs);
+    }
+
+    .search-input {
+        padding: var(--space-1) var(--space-2);
+    }
+
+    .search-input input {
+        width: 120px;
+        font-size: var(--text-xs);
+    }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn {
+        padding: var(--space-1) var(--space-3);
+        font-size: var(--text-xs);
+    }
+
+    .btn-sm {
+        padding: var(--space-1) var(--space-2);
+        font-size: 10px;
+    }
+
+    /* ── F&O Chain Table ───────────────────────────── */
+    .fno-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .fno-oi-distribution {
+        flex-direction: column;
+    }
+
+    .fno-oi-bar-label {
+        width: 55px;
+        font-size: 10px;
+    }
+
+    /* ── OI Buildup Grid ──────────────────────────── */
+    .oi-buildup-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* ── Compare Grid ─────────────────────────────── */
+    .compare-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ── Empty State ──────────────────────────────── */
+    .empty-state {
+        padding: var(--space-8) var(--space-4);
+    }
+
+    .empty-state-icon {
+        font-size: 2rem;
+    }
+
+    /* ── User dropdown ────────────────────────────── */
+    .header-dropdown {
+        right: 0;
+        min-width: 180px;
+    }
+
+    /* ── Exchange Legend ───────────────────────────── */
+    .exchange-legend {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+    }
+
+    .exchange-legend::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SMALL MOBILE — max-width: 480px
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    /* Single column grids everywhere */
+    .grid-4,
+    .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Compact header */
+    .header {
+        height: 48px;
+        padding: 0 var(--space-2);
+    }
+
+    .header-title {
+        font-size: var(--text-xs) !important;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Hide subtitle on very small screens */
+    .header-left > div > div:last-child {
+        display: none;
+    }
+
+    /* Condensed main content */
+    .main-content {
+        padding: var(--space-2) !important;
+    }
+
+    /* Stats bar compact */
+    .stats-bar {
+        padding: var(--space-2);
+        gap: var(--space-2);
+    }
+
+    /* Ticker */
+    .ticker-bar {
+        height: 24px;
+        font-size: 9px;
+    }
+
+    /* Dashboard controls stacked */
+    .dashboard-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-controls > * {
+        width: 100%;
+    }
+
+    .filter-toggle {
+        display: flex;
+        width: 100%;
+    }
+
+    .filter-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Commodity card price */
+    .commodity-card-price {
+        font-size: var(--text-sm);
+    }
+
+    /* Page title */
+    .page-title {
+        font-size: var(--text-base);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TOUCH DEVICE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════════════ */
+@media (hover: none) {
+    /* Disable hover effects on touch devices */
+    .commodity-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .card:hover {
+        box-shadow: none;
+    }
+
+    .sidebar-link:hover {
+        background: none;
+    }
+
+    .sidebar-link.active {
+        background: var(--brand-primary-subtle);
+    }
+
+    /* Better touch targets */
+    .sidebar-link {
+        padding: var(--space-3) var(--space-3);
+        min-height: 44px;
+    }
+
+    .tab {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn,
+    .filter-btn {
+        min-height: 36px;
+    }
+}
